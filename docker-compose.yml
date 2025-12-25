@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: remy30-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: remy30
+      POSTGRES_USER: remy30
+      POSTGRES_PASSWORD: remy30_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - remy30_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U remy30 -d remy30"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: remy30-web
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      # Prisma / Postgres
+      DATABASE_URL: "postgresql://remy30:remy30_password@db:5432/remy30?schema=public"
+      # Si tu utilises une SECRET JWT / COOKIE etc, mets-les ici:
+      # AUTH_SECRET: "..."
+    # optionnel si tu veux un healthcheck HTTP
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/login >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  remy30_pgdata:
