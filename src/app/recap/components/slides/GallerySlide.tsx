@@ -2,8 +2,9 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import type { SlideProps } from "./SlideRenderer";
-import { Icon } from "../components/Icon";
+import { Icon } from "../Icon";
 
 function uniqStrings(xs: string[]) {
   const out: string[] = [];
@@ -37,6 +38,7 @@ function mulberry32(seed: number) {
 }
 
 export function GallerySlide({ gallery, reviews }: SlideProps) {
+  const router = useRouter();
   const [hoveredSrc, setHoveredSrc] = React.useState<string | null>(null);
 
   const reviewImgs = React.useMemo(
@@ -44,10 +46,6 @@ export function GallerySlide({ gallery, reviews }: SlideProps) {
     [reviews]
   );
 
-  console.log(gallery);
-  console.log(reviewImgs);
-  
-  
   const images = React.useMemo(() => uniqStrings([...(gallery || []), ...reviewImgs]), [
     gallery,
     reviewImgs,
@@ -79,7 +77,6 @@ export function GallerySlide({ gallery, reviews }: SlideProps) {
 
       const z = 10 + Math.floor(rnd() * 10);
 
-      // ✅ IMPORTANT: on retourne w/h
       return { src, i, x, y, w, h, r0, r1, s, dx, dy, dur, delay, z };
     });
   }, [images]);
@@ -90,9 +87,8 @@ export function GallerySlide({ gallery, reviews }: SlideProps) {
 
   function openGallery(src: string) {
     const q = encodeURIComponent(src);
-    window.open(`/galerie?photo=${q}`, "_blank", "noopener,noreferrer");
+    router.push(`/galerie?photo=${q}`);
   }
-
 
   return (
     <div className="galRoot">
@@ -134,7 +130,7 @@ export function GallerySlide({ gallery, reviews }: SlideProps) {
                 <motion.button
                   key={`${t.src}-${t.i}`}
                   type="button"
-                  className={`tile ${isHover ? "isHover" : ""}`}
+                  className={`${isHover ? "isHover" : ""}`}
                   onClick={() => openGallery(t.src)}
                   onMouseEnter={() => setHoveredSrc(t.src)}
                   onMouseLeave={() => setHoveredSrc(null)}
@@ -146,8 +142,9 @@ export function GallerySlide({ gallery, reviews }: SlideProps) {
                     top: `${t.y}%`,
                     width: `${t.w}px`,
                     height: `${t.h}px`,
-                    // ✅ au survol: au-dessus de tout
                     zIndex: isHover ? 9999 : t.z,
+                    background : 'transparent',
+                    border: "none"
                   }}
                   initial={{ opacity: 0, scale: 0.96, rotate: t.r0, x: "0%", y: "0%" }}
                   animate={{ opacity: 1, scale: t.s, rotate: t.r1, x: `${t.dx}%`, y: `${t.dy}%` }}
@@ -155,7 +152,7 @@ export function GallerySlide({ gallery, reviews }: SlideProps) {
                   whileHover={{ scale: t.s * 1.08, rotate: t.r1 * 0.5 }}
                   whileTap={{ scale: t.s * 0.98 }}
                 >
-                  <img className="img" src={t.src} alt="" loading="lazy" />
+                  <img className="imgT" src={t.src} alt="" loading="lazy" />
                   <span className="shine" aria-hidden="true" />
                 </motion.button>
               );
@@ -164,7 +161,7 @@ export function GallerySlide({ gallery, reviews }: SlideProps) {
         )}
       </div>
 
-      <div className="galHint">Clique une image pour l’ouvrir dans /galerie.</div>
+      {/* <div className="galHint">Tape une image pour l’ouvrir dans /galerie.</div> */}
 
       <style jsx>{`
         .galRoot {
@@ -225,27 +222,22 @@ export function GallerySlide({ gallery, reviews }: SlideProps) {
           border-radius: 22px;
           overflow: hidden;
           cursor: pointer;
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.14);
-          box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
           z-index: 10;
           will-change: transform;
           outline: none;
         }
 
-        /* ✅ survol visuel + "au-dessus" (z-index géré en inline) */
         .tile.isHover {
           box-shadow: 0 34px 110px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.22);
         }
 
-        .img {
+        .imgT {
           width: 100%;
           height: 100%;
           display: block;
           object-fit: cover;
           transform: scale(1.03);
           filter: saturate(1.12) contrast(1.05);
-          cursor : pointer;
         }
 
         .shine {

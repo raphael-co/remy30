@@ -21,7 +21,7 @@ export default function BackButton() {
         </svg>
       </span>
 
-      <span>Scroll</span>
+      <span className={styles.icon}>Scroll</span>
     </button>
   );
 }

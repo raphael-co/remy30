@@ -1,11 +1,10 @@
-// src/components/recap/slides/StatsSlide.tsx
 "use client";
 
 import React from "react";
 import { motion } from "framer-motion";
 import type { SlideProps } from "./SlideRenderer";
-import { Icon } from "../components/Icon";
-import { clamp, formatDate, stars } from "../lib/utils";
+import { clamp, formatDate, stars } from "../../utils";
+import { Icon } from "../Icon";
 
 export function StatsSlide({ reviews, latestReviews, avg, gallery }: SlideProps) {
   const reviewCount = reviews?.length ?? 0;

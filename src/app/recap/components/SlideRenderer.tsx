@@ -1,14 +1,13 @@
 "use client";
 
 import React from "react";
-import type { Product, Review, Slide } from "../types";
-
-import { IntroSlide } from "./IntroSlide";
-import { ProductSlide } from "./ProductSlide";
-import { StatsSlide } from "./StatsSlide";
-import { GallerySlide } from "./GallerySlide";
-import { ReviewsSlide } from "./ReviewsSlide";
-import { OutroSlide } from "./OutroSlide";
+import { Product, Review, Slide } from "../types";
+import IntroSlide from "./slides/IntroSlide";
+import ProductSlide from "./slides/ProductSlide";
+import StatsSlide from "./slides/StatsSlide";
+import GallerySlide from "./slides/GallerySlide";
+import ReviewsSlide from "./slides/ReviewsSlide";
+import OutroSlide from "./slides/OutroSlide";
 
 export type SlideProps = {
   slide: Slide;
@@ -17,7 +16,6 @@ export type SlideProps = {
   latestReviews: Review[];
   avg: number;
   gallery: string[];
-  onOpenLightbox: (i: number) => void;
   onReplay: () => void;
   onClose: () => void;
 };
