@@ -7,8 +7,6 @@ services:
       POSTGRES_DB: remy30
       POSTGRES_USER: remy30
       POSTGRES_PASSWORD: remy30_password
-    ports:
-      - "5432:5432"
     volumes:
       - remy30_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -16,6 +14,19 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+
+  migrate:
+    image: node:20-alpine
+    working_dir: /app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://remy30:remy30_password@db:5432/remy30?schema=public"
+    volumes:
+      - ./:/app
+    command: sh -lc "npm ci --ignore-scripts && npx --yes prisma db push --schema ./prisma/schema.prisma"
+    restart: "no"
 
   web:
     build:
@@ -26,16 +37,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     ports:
-      - "3000:3000"
+      - "3010:3000"
     environment:
       NODE_ENV: production
       PORT: "3000"
-      # Prisma / Postgres
       DATABASE_URL: "postgresql://remy30:remy30_password@db:5432/remy30?schema=public"
-      # Si tu utilises une SECRET JWT / COOKIE etc, mets-les ici:
-      # AUTH_SECRET: "..."
-    # optionnel si tu veux un healthcheck HTTP
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000/login >/dev/null 2>&1 || exit 1"]
       interval: 10s

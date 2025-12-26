@@ -14,8 +14,12 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Si Prisma est utilisé et schema présent
-RUN npx prisma generate || true
+# ✅ Prisma 7: DATABASE_URL doit exister pour charger prisma.config.ts pendant le build
+# (valeur dummy, Prisma ne se connecte pas pour generate)
+ENV DATABASE_URL="postgresql://user:pass@localhost:5432/db?schema=public"
+
+# Prisma client
+RUN npx prisma generate
 
 RUN npm run build
 
@@ -26,9 +30,14 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
 
+# Next standalone runtime
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
+
+# Prisma schema + config Prisma 7 au runtime
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 
 USER nextjs
 EXPOSE 3000

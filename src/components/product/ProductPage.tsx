@@ -12,6 +12,7 @@ import { clamp } from "@/lib/utils";
 import ReviewsSection from "@/components/reviews/ReviewsSection";
 import AuthModal from "@/components/auth/AuthModal";
 import { useAuth } from "@/components/auth/useAuth";
+import RecapButton from "../recap/RecapButton";
 
 function normalizeImages(heroImageUrl: string | null, gallery: string[]) {
   const urls = [heroImageUrl, ...gallery].filter(Boolean) as string[];
@@ -213,6 +214,8 @@ export default function ProductPage() {
             )}
           </div>
         </section>
+
+        <RecapButton />
 
         <ReviewsSection onRequireAuth={() => setAuthOpen(true)} />
 
