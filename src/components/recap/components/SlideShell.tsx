@@ -59,7 +59,7 @@ export function SlideShell({
           height: 100%;
           width: 100%;
           display: grid;
-          padding: clamp(16px, 3vw, 44px);
+        
           color: #fff;
         }
       `}</style>

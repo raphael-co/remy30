@@ -215,8 +215,6 @@ export default function ProductPage() {
           </div>
         </section>
 
-        <RecapButton />
-
         <ReviewsSection onRequireAuth={() => setAuthOpen(true)} />
 
         <Footer />

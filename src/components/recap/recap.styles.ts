@@ -95,15 +95,23 @@ export const recapCss = `
 }
 
 /* ===== CONTENT ===== */
+/* ✅ Fix: le contenu doit remplir la slide pour les slides "plein écran" */
 .content {
   position: relative;
   z-index: 2;
-  display: grid;
-  align-content: center;
-  gap: 14px;
-  max-width: min(980px, 100%);
+
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+
+  /* on enlève le grid + align-content:center qui casse les layouts absolute/full */
+  display: block;
+
+  /* on enlève la contrainte globale */
+  max-width: none;
 }
 
+/* Pour les slides non full-screen, on garde un "cadre" dans les composants eux-mêmes */
 .center {
   display: grid;
   justify-items: start;

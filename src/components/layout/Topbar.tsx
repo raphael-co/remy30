@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useAuth } from "@/components/auth/useAuth";
+import RecapButton from "../recap/RecapButton";
 
 export default function Topbar({ onOpenAuth }: { onOpenAuth: () => void }) {
   const { user, isLoggedIn, logout, loading } = useAuth();
@@ -14,12 +15,14 @@ export default function Topbar({ onOpenAuth }: { onOpenAuth: () => void }) {
       </div>
 
       <nav className="nav">
-        <a href="#galerie">Galerie</a>
-        <a href="#infos">Infos</a>
+        <a href="/galerie">Galerie</a>
+        {/* <a href="#infos">Infos</a> */}
         <a href="#avis">Avis</a>
       </nav>
+      <RecapButton />
 
       <div className="right">
+
         {loading ? (
           <div className="pill ghost">…</div>
         ) : isLoggedIn ? (

@@ -117,6 +117,7 @@ export function IntroSlide({ product, reviews, gallery }: SlideProps) {
       <style jsx>{`
         .intro {
           gap: 14px;
+          padding: clamp(16px, 3vw, 44px);
         }
 
         /* Cover card */

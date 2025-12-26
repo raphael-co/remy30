@@ -3,13 +3,15 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Produit",
-  description: "Page produit démo",
+  title: "30 De Remy",
+  description: "Cette page c'est pour toi Remy",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="fr" style={{
+      background : "#f0ecdb"
+    }}>
       <body>
         <AuthProvider>{children}</AuthProvider>
       </body>

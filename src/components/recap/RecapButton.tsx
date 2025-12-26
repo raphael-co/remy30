@@ -14,7 +14,6 @@ export default function RecapButton() {
           <Icon name="sparkles" size={18} />
         </span>
         <span className="txt">Recap</span>
-        <span className="chip">Story</span>
       </button>
 
       <RecapPlayer open={open} onClose={() => setOpen(false)} />
@@ -25,7 +24,7 @@ export default function RecapButton() {
           padding: 0 12px;
           border-radius: 999px;
           border: 1px solid rgba(15, 23, 42, 0.14);
-          background: rgba(255, 255, 255, 0.86);
+          background: #fdf9f6;
           box-shadow: 0 12px 30px rgba(2, 6, 23, 0.08);
           display: inline-flex;
           align-items: center;

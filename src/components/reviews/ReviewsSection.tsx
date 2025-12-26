@@ -985,6 +985,14 @@ export default function ReviewsSection({ onRequireAuth }: { onRequireAuth: () =>
           .currentActions {
             justify-content: flex-start;
           }
+
+          /* ✅ Mobile: form en haut */
+          .formCard {
+            order: -1;
+          }
+          .listCard {
+            order: 0;
+          }
         }
       `}</style>
     </section>

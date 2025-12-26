@@ -1,0 +1,310 @@
+/* src/app/galerie/galerie.module.css */
+
+/* global reset autorisé en CSS Module via :global */
+:global(*) {
+  box-sizing: border-box;
+}
+
+/* hide scrollbar (global) */
+:global(::-webkit-scrollbar) {
+  width: 1px;
+  height: 1px;
+}
+
+:global(::-webkit-scrollbar-button) {
+  width: 1px;
+  height: 1px;
+}
+
+/* ✅ FIX: 100dvh pour mobile (100vh est faux sur iOS/Chrome mobile) */
+.external {
+  overflow: hidden;
+
+  height: 100vh; /* fallback */
+  height: 100dvh;
+  min-height: 100dvh;
+
+  width: 100vw;
+
+  background: #efecdb;
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+
+/* UI overlay (back button) — tu l’utilises via BackButton */
+.scrollInfo {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 12px;
+  border-radius: 999px;
+
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+
+  user-select: none;
+  z-index: 10;
+
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.scrollInfo:hover {
+  cursor: pointer;
+}
+
+.icon svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+  opacity: 0.9;
+}
+
+.header {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 10;
+
+  max-width: min(520px, calc(100vw - 36px));
+  padding: 14px;
+
+  border-radius: calc(var(--radius) + 2px);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.kicker {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.h1 {
+  margin: 0 0 6px 0;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.hint code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+
+  background: color-mix(in srgb, var(--surface-2) 80%, transparent);
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+/* ============================================================
+   ✅ MOBILE-FIRST (robuste iOS) : vrai scroll horizontal
+   (plus de rotate(-90deg) sur mobile)
+============================================================ */
+
+.horizontalScrollWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+
+  width: 100vw;
+  height: 100%;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+
+  padding: 20px 18px 120px 18px; /* laisse respirer + espace pour le header */
+}
+
+/* items */
+.imgWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+  min-height: auto;
+
+  transform: none; /* IMPORTANT mobile */
+  transform-origin: 50% 50%;
+  transition: transform 600ms ease, filter 300ms ease;
+}
+
+/* bouton + image (ton “zoom minimal”) */
+.thumbBtn {
+  all: unset;
+  cursor: pointer;
+  display: block;
+}
+
+.thumbImg {
+  width: min(82vw, 560px);
+  height: auto;
+  max-height: min(62dvh, 680px);
+  object-fit: contain;
+
+  vertical-align: top;
+
+  transition: transform 400ms ease, filter 400ms ease;
+  transform: scale(1.02);
+  filter: saturate(0.92) contrast(1.05);
+
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.thumbBtn:hover .thumbImg {
+  transform: scale(1.06);
+  filter: saturate(1.06) contrast(1.06);
+}
+
+/* ============================================================
+   ✅ DESKTOP : on réactive ton hack rotate + parallax
+   (c’est lui qui casse sur mobile)
+============================================================ */
+@media (min-width: 900px) {
+  .horizontalScrollWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100vh;
+    height: 100vw;
+
+    transform: rotate(-90deg) translate3d(0, -100vh, 0);
+    transform-origin: right top;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    perspective: 1px;
+    transform-style: preserve-3d;
+
+    padding: 0 0 10rem 0;
+  }
+
+  .imgWrapper {
+    min-height: 40vh;
+    transform-origin: 50% 50%;
+    transform: rotate(90deg) translateZ(0.1px) scale(0.92) translateX(0px) translateY(-3vh);
+    transition: min-height 300ms ease, transform 600ms ease, filter 300ms ease;
+  }
+
+  .imgWrapper:hover {
+    min-height: 66vh;
+  }
+
+  /* tes variantes “parallax” */
+  .base {
+    transform: rotate(90deg) translateZ(0.1px) scale(0.92) translateX(0px) translateY(-3vh);
+  }
+
+  .slower {
+    transform: rotate(90deg) translateZ(-0.2px) scale(1.12) translateX(0%) translateY(-10vh);
+  }
+
+  .slower1 {
+    transform: rotate(90deg) translateZ(-0.25px) scale(1.06) translateX(0%) translateY(8vh);
+  }
+
+  .slower2 {
+    transform: rotate(90deg) translateZ(-0.3px) scale(1.28) translateX(0%) translateY(2vh);
+  }
+
+  .slowerDown {
+    transform: rotate(90deg) translateZ(-0.2px) scale(1.12) translateX(0%) translateY(16vh);
+  }
+
+  .faster {
+    transform: rotate(90deg) translateZ(0.15px) scale(0.82) translateX(0%) translateY(14vh);
+  }
+
+  .faster1 {
+    transform: rotate(90deg) translateZ(0.05px) scale(0.82) translateX(0%) translateY(10vh);
+  }
+
+  .fastest {
+    transform: rotate(90deg) translateZ(0.22px) scale(0.72) translateX(-10vh) translateY(-15vh);
+  }
+
+  .vertical {
+    transform: rotate(90deg) translateZ(-0.15px) scale(1.16) translateX(0%) translateY(0%);
+  }
+
+  .last {
+    transform: rotate(90deg) translateZ(-0.2px) scale(1.12) translateX(25vh) translateY(-8vh);
+  }
+}
+
+/* ============================================================
+   ✅ Lightbox overlay
+============================================================ */
+
+.zOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+
+  background: #efecdb4d;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  display: grid;
+  place-items: center;
+
+  touch-action: none; /* évite les scrolls bizarres pendant le zoom */
+}
+
+.zClose {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+
+  color: rgba(0, 0, 0, 0.92);
+  cursor: pointer;
+
+  display: grid;
+  place-items: center;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.zClose:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ✅ aucune déformation : contain + max sizes */
+.zImage {
+  width: min(96vw, 1200px);
+  height: min(90dvh, 900px);
+  object-fit: contain;
+
+  user-select: none;
+  -webkit-user-drag: none;
+}
